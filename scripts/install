@@ -132,6 +132,18 @@ chmod 400 "$install_dir/config/config.inc.php"
 chown $app:$app "$install_dir/config/config.inc.php"
 
 #=================================================
+# ADD DATABASE CLEANUP SERVICE
+#=================================================
+
+ynh_config_add --template="database-cleanup.timer" --destination="/etc/systemd/system/$app-database-cleanup.timer"
+ynh_config_add --template="database-cleanup.service" --destination="/etc/systemd/system/$app-database-cleanup.service"
+yunohost service add "$app-database-cleanup" \
+    --description="Roundcube periodical database cleanup" \
+    --test_status="systemctl show $app-database-cleanup.service -p ActiveState --value | grep -v failed"
+ynh_systemctl --service="$app-database-cleanup.timer" --action="enable"
+ynh_systemctl --service="$app-database-cleanup.timer" --action="start"
+
+#=================================================
 # END OF SCRIPT
 #=================================================
 
