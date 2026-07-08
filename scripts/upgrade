@@ -29,10 +29,9 @@ timezone=$(timedatectl show --value --property=Timezone)
 
 if ynh_app_upgrading_from_version_before 1.7.2~ynh1; then
 	ynh_composer_exec remove sblaisot/automatic_addressbook
-    ynh_mysql_db_shell <<< "RENAME TABLE collected_contacts TO collected_contacts_bak;"
+    ynh_mysql_db_shell <<< "DROP TABLE IF EXISTS collected_contacts;"
     ynh_composer_exec require projectmyst/automatic_addressbook:$automatic_addressbook_version \
         --update-no-dev
-    ynh_mysql_db_shell <<< "DROP TABLE collected_contacts; RENAME TABLE collected_contacts_bak TO collected_contacts;"
 fi
 
 #=================================================
