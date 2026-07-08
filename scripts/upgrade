@@ -75,6 +75,7 @@ pushd "$install_dir/tmp_aaa"
 popd
 
 ynh_safe_rm "$install_dir/tmp_aaa"
+ynh_composer_exec update --no-dev
 
 #=================================================
 # UPGRADE ADDITIONAL PLUGINS
@@ -157,6 +158,18 @@ pushd "$install_dir"
     # Updating core
     COMPOSER_ALLOW_SUPERUSER=1 ynh_hide_warnings "php$php_version" ./bin/update.sh --version=$oldversion -y
 popd
+
+#=================================================
+# (RE)ADD DATABASE CLEANUP SERVICE
+#=================================================
+
+ynh_config_add --template="database-cleanup.timer" --destination="/etc/systemd/system/$app-database-cleanup.timer"
+ynh_config_add --template="database-cleanup.service" --destination="/etc/systemd/system/$app-database-cleanup.service"
+yunohost service add "$app-database-cleanup" \
+    --description="Roundcube periodical database cleanup" \
+    --test_status="systemctl show $app-database-cleanup.service -p ActiveState --value | grep -v failed"
+ynh_systemctl --service="$app-database-cleanup.timer" --action="enable"
+ynh_systemctl --service="$app-database-cleanup.timer" --action="start"
 
 #=================================================
 # END OF SCRIPT
