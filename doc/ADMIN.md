@@ -2,7 +2,7 @@ You can extend - or even override - the Roundcube configuration which is coming 
 
 You can install plugins - which will not be removed with upgrades. To do so, you can use the official [Plugin Repository](https://plugins.roundcube.net/).
 
-#### From the Plugin Repository
+#### From the Plugin Repositorya
 
 Let's say for example that we want to install the [html5_notifier](https://packagist.org/packages/kitist/html5_notifier) plugin.
 
