@@ -71,6 +71,8 @@ ynh_config_add --template="config.inc.php" --destination="$install_dir/config/co
 
 ynh_script_progression "Running upstream migration"
 pushd "$install_dir/tmp_aaa"
+ynh_replace --match="system("cd {$target_dir} && " . PHP_BINARY . " bin/install-jsdeps.sh");" --replace="system("cd {$target_dir} && " . PHP_BINARY . " bin/install-jsdeps.sh");" --file="bin/installto.sh"
+ynh_replace --match="system("cd {$target_dir} && bin/update.sh --version={$oldversion}" . ($accept ? ' -y' : ''));" --replace="system("cd {$target_dir} && " . PHP_BINARY . " bin/update.sh --version={$oldversion}" . ($accept ? ' -y' : ''));"
     ynh_exec_as_app php$php_version bin/installto.sh -y $install_dir
 popd
 
